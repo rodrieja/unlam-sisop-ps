@@ -1,4 +1,4 @@
-#  1. Filtrado de archivos por extensi�n
+#  1. Filtrado de archivos por extensión
 #  2. Lectura de archivos
 #  3. Escritura de archivos
 #  4. ForEach-Object (Split)
@@ -9,8 +9,8 @@
 #  9. Parametros
 # 10. Metodos Write-
 
-# 1. Filtrado de archivos por extensi�n
-# -Filter: permite filtrar por una expresi�n regular.
+# 1. Filtrado de archivos por extensión
+# -Filter: permite filtrar por una expresión regular.
 # -Path: indica el directorio a listar
 # -Recurse: muestra el contenido del directorio y los subdirectorios
 ls /home/alejandro/Documentos/
@@ -22,8 +22,8 @@ Get-ChildItem -Filter "*pdf" -Recurse | Select-Object -Property Directory, Name,
 # Lectura de archivos: Get-Content
 #
 # -Path: para indicar la ruta del archivo
-# -TotalCount N: N primeras l�neas, similar a head
-# -Tail N: N �ltimas l�neas, similar a tail
+# -TotalCount N: N primeras líneas, similar a head
+# -Tail N: N últimas líneas, similar a tail
 # -Wait: Lee el archivo en tiempo real, similar a tail -f
 #        Para cancelarlo, oprimir Ctrl-C
 
@@ -87,7 +87,7 @@ Get-Content $delimitados | ForEach-Object {
 
 # 5. Eventos
 
-# Obtenci�n de los eventos que puede registrar un objeto
+# Obtención de los eventos que puede registrar un objeto
 New-Object Timers.Timer | Get-Member -Type Event | Select Name
 # 
 # Name    
@@ -119,16 +119,16 @@ $timer2 = New-Object Timers.Timer
 $timer3 = New-Object Timers.Timer 
 $repeticiones = 1 
 $action = {
-    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format �HH:mm:ss�)"
+    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ‘HH:mm:ss’)"
     $repeticiones++ } 
 $timer.Interval = 1000 #3 seconds  
 $timer2.Interval = 2000 #3 seconds  
 $timer3.Interval = 3000 #3 seconds  
     
 
-Register-ObjectEvent -InputObject $timer -EventName elapsed -SourceIdentifier thetimer -Action $action 
-Register-ObjectEvent -InputObject $timer2 -EventName elapsed -SourceIdentifier thetimer2 -Action $action 
-Register-ObjectEvent -InputObject $timer3 -EventName elapsed -SourceIdentifier thetimer3 -Action $action 
+Register-ObjectEvent -InputObject $timer -EventName elapsed –SourceIdentifier thetimer -Action $action 
+Register-ObjectEvent -InputObject $timer2 -EventName elapsed –SourceIdentifier thetimer2 -Action $action 
+Register-ObjectEvent -InputObject $timer3 -EventName elapsed –SourceIdentifier thetimer3 -Action $action 
 
 # Para iniciar el timer
 $timer.start()
@@ -143,9 +143,9 @@ Unregister-Event thetimer
 # Obtengo los eventos registrados
 Get-EventSubscriber | Unregister-Event
 
-# Ejemplo utilizando la funci�n de forma global
+# Ejemplo utilizando la función de forma global
 function global:MainAction {
-    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format �HH:mm:ss�)"
+    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ‘HH:mm:ss’)"
 }
 
 $Action = { MainAction }
@@ -168,7 +168,7 @@ Write-Host $destination
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory($source, $destination) 
 
-# A partir de la versi�n 5 se pueden utilizar los cmdlets Compress-Archive y Expand-Archive
+# A partir de la versión 5 se pueden utilizar los cmdlets Compress-Archive y Expand-Archive
 # Igual al ejemplo con Add-Type
 Compress-Archive -Path $source -DestinationPath $destination
 # Ahora puedo filtrar los componentes y agrear
@@ -224,22 +224,22 @@ $paises.Add('Brasil') > $null
 $paises.Add(22)
 $paises
 # Hast Tables: 
-# Hash Table vac�o
+# Hash Table vacío
 $materias = @{ }
 # Hash Table inicializado con valores
 $materias = @{SO= "Sistemas Operativos"; CP = "Compiladores"; BD = "Base de Datos" }
 # Agregar y quitar valores
-$materias.add("PR1", "Programaci�n 1")
+$materias.add("PR1", "Programación 1")
 $materias["PR1"]
 
 $materias.Remove("PR1")
 $materias["PR1"]
 
-$materias["PR1"] = "Programaci�n 1"
+$materias["PR1"] = "Programación 1"
 $materias["PR1"]
 
-# 9. Par�metros
-# 9.1 - Definici�n de Par�metros
+# 9. Parámetros
+# 9.1 - Definición de Parámetros
 # 9.2 - Validaciones
 # [ValidateScript({Test-Path $_ -PathType 'Container'})] 
 # [String] 
@@ -290,3 +290,48 @@ parameterTest -stringValue "f" -set2
 parameterTest -stringValue "f" -set2 -intSet2 22
 parameterTest -stringValue "f" -set2 -intSet2 22 -stringSet1 "ss"
 parameterTest -set2 -intSet2 22
+
+
+#----------------------------------------
+# Reemplazo fácil de texto
+$archivo=Get-Content -path ./ejemplo2.txt
+# Usa Regex
+$archivo -replace "class="".*""", "class=""nueva-class""" 
+# No usa Regex, pero es más rápido
+$archivo.replace("class="".*""", "class=""nueva-class""")
+
+$archivo -replace "div", "tag"
+$archivo -replace "div", "tag" -replace "tag", "otro"
+$nuevoArchivo = $archivo -replace "class="".*""", "class=""nueva-class""" 
+
+# Regular Expresions -match
+$regex = Get-Content -path ./regex.txt
+$regex -match "[0-9][0-9][0-9]/"
+$regex -match "^[0-9][0-9]/"
+
+# Select-String, parecido a grep
+Select-String -path ./ejemplo2.txt -pattern "class"
+Select-String -path ./ejemplo2.txt -pattern "class" | Get-Member
+$coincidencias = Select-String -path ./ejemplo2.txt -pattern "class"
+$coincidencias.Line
+
+(Select-String -path ./ejemplo2.txt -pattern "class").Line
+(Select-String -path ./ejemplo2.txt -pattern "class").LineNumber
+
+# Compare-Objects / Get-FileHash
+#Compare-Objects -ReferenceObject  -DifferenceObject
+Get-FileHash ./ejemplo2.txt | Format-List
+Get-FileHash ./regex.txt | Format-List
+
+# Compare-Files -file1 ./regex.txt -file2 ./regex.txt
+
+$archivo = Get-ChildItem -Path ./regex.txt
+$archivo
+$archivo.Length/1GB 
+
+# ConvertTo-Json / ConvertFrom-Json
+Get-Date | Select-Object -Property * | ConvertTo-Json
+
+$json = @{tag="button";cantidad=4;lineas=@(2, 45, 77, 145)}
+$json | ConvertTo-Json
+
