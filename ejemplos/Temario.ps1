@@ -1,4 +1,4 @@
-#  1. Filtrado de archivos por extensión
+#  1. Filtrado de archivos por extensiï¿½n
 #  2. Lectura de archivos
 #  3. Escritura de archivos
 #  4. ForEach-Object (Split)
@@ -9,8 +9,8 @@
 #  9. Parametros
 # 10. Metodos Write-
 
-# 1. Filtrado de archivos por extensión
-# -Filter: permite filtrar por una expresión regular.
+# 1. Filtrado de archivos por extensiï¿½n
+# -Filter: permite filtrar por una expresiï¿½n regular.
 # -Path: indica el directorio a listar
 # -Recurse: muestra el contenido del directorio y los subdirectorios
 ls /home/alejandro/Documentos/
@@ -22,8 +22,8 @@ Get-ChildItem -Filter "*pdf" -Recurse | Select-Object -Property Directory, Name,
 # Lectura de archivos: Get-Content
 #
 # -Path: para indicar la ruta del archivo
-# -TotalCount N: N primeras líneas, similar a head
-# -Tail N: N últimas líneas, similar a tail
+# -TotalCount N: N primeras lï¿½neas, similar a head
+# -Tail N: N ï¿½ltimas lï¿½neas, similar a tail
 # -Wait: Lee el archivo en tiempo real, similar a tail -f
 #        Para cancelarlo, oprimir Ctrl-C
 
@@ -87,7 +87,7 @@ Get-Content $delimitados | ForEach-Object {
 
 # 5. Eventos
 
-# Obtención de los eventos que puede registrar un objeto
+# Obtenciï¿½n de los eventos que puede registrar un objeto
 New-Object Timers.Timer | Get-Member -Type Event | Select Name
 # 
 # Name    
@@ -119,16 +119,16 @@ $timer2 = New-Object Timers.Timer
 $timer3 = New-Object Timers.Timer 
 $repeticiones = 1 
 $action = {
-    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ‘HH:mm:ss’)"
+    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ï¿½HH:mm:ssï¿½)"
     $repeticiones++ } 
 $timer.Interval = 1000 #3 seconds  
 $timer2.Interval = 2000 #3 seconds  
 $timer3.Interval = 3000 #3 seconds  
     
 
-Register-ObjectEvent -InputObject $timer -EventName elapsed –SourceIdentifier thetimer -Action $action 
-Register-ObjectEvent -InputObject $timer2 -EventName elapsed –SourceIdentifier thetimer2 -Action $action 
-Register-ObjectEvent -InputObject $timer3 -EventName elapsed –SourceIdentifier thetimer3 -Action $action 
+Register-ObjectEvent -InputObject $timer -EventName elapsed -SourceIdentifier thetimer -Action $action 
+Register-ObjectEvent -InputObject $timer2 -EventName elapsed -SourceIdentifier thetimer2 -Action $action 
+Register-ObjectEvent -InputObject $timer3 -EventName elapsed -SourceIdentifier thetimer3 -Action $action 
 
 # Para iniciar el timer
 $timer.start()
@@ -143,9 +143,9 @@ Unregister-Event thetimer
 # Obtengo los eventos registrados
 Get-EventSubscriber | Unregister-Event
 
-# Ejemplo utilizando la función de forma global
+# Ejemplo utilizando la funciï¿½n de forma global
 function global:MainAction {
-    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ‘HH:mm:ss’)"
+    write-host "$repeticiones, Timer Elapse Event: $(get-date -Format ï¿½HH:mm:ssï¿½)"
 }
 
 $Action = { MainAction }
@@ -168,7 +168,7 @@ Write-Host $destination
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory($source, $destination) 
 
-# A partir de la versión 5 se pueden utilizar los cmdlets Compress-Archive y Expand-Archive
+# A partir de la versiï¿½n 5 se pueden utilizar los cmdlets Compress-Archive y Expand-Archive
 # Igual al ejemplo con Add-Type
 Compress-Archive -Path $source -DestinationPath $destination
 # Ahora puedo filtrar los componentes y agrear
@@ -224,22 +224,22 @@ $paises.Add('Brasil') > $null
 $paises.Add(22)
 $paises
 # Hast Tables: 
-# Hash Table vacío
+# Hash Table vacï¿½o
 $materias = @{ }
 # Hash Table inicializado con valores
 $materias = @{SO= "Sistemas Operativos"; CP = "Compiladores"; BD = "Base de Datos" }
 # Agregar y quitar valores
-$materias.add("PR1", "Programación 1")
+$materias.add("PR1", "Programaciï¿½n 1")
 $materias["PR1"]
 
 $materias.Remove("PR1")
 $materias["PR1"]
 
-$materias["PR1"] = "Programación 1"
+$materias["PR1"] = "Programaciï¿½n 1"
 $materias["PR1"]
 
-# 9. Parámetros
-# 9.1 - Definición de Parámetros
+# 9. Parï¿½metros
+# 9.1 - Definiciï¿½n de Parï¿½metros
 # 9.2 - Validaciones
 # [ValidateScript({Test-Path $_ -PathType 'Container'})] 
 # [String] 
@@ -266,19 +266,18 @@ function parameterTest {
         [Parameter(ParameterSetName="set2")]
         [int32]
         $intSet2
-        
     )
     
     if ($switchValue){
-        Write-Host "Se seleccionó el parámetro switch" -ForegroundColor Green
+        Write-Host "Se seleccionÃ³ el parÃ¡metro switch" -ForegroundColor Green
     }
 
     if ($set1){
-        Write-Host "Se seleccionó el parámetro grupo set1: $stringSet1" -ForegroundColor Yellow
+        Write-Host "Se seleccionÃ³ el parÃ¡metro grupo set1: $stringSet1" -ForegroundColor Yellow
     }
 
     if ($set2){
-        Write-Host "Se seleccionó el parámetro grupo set2: $intSet2" -ForegroundColor Red
+        Write-Host "Se seleccionÃ³ el parÃ¡metro grupo set2: $intSet2" -ForegroundColor Red
     }
 
     Write-Host "Este siempre viene stringValue: $stringValue" -ForegroundColor Green
